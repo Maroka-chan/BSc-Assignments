@@ -14,7 +14,7 @@ def encrypt(message, receiver_pk, sk, prime):
     return ((receiver_pk**sk) % prime) * message
 
 def decrypt(ciphertext, sender_pk, sk, prime):
-    return ciphertext // ((sender_pk**sk) % prime)
+    return (ciphertext * (((sender_pk**sk) ** (prime-2)) % prime) % prime)
 
 def bruteforce_sk(ct, base, prime, pk):
     sk = 1
@@ -25,10 +25,26 @@ def bruteforce_sk(ct, base, prime, pk):
         sk += 1
     return sk
 
-ciphertext = encrypt(message_from_alice, Bob_pk, Alice_sk, p)
-print("Ciphertext: ", ciphertext)
+def modify_message(ciphertext, prime):
+    return (ciphertext * 3) % prime
 
+
+ciphertext = encrypt(message_from_alice, Bob_pk, Alice_sk, p)
+
+print("1:")
+print("Ciphertext: ", ciphertext)
 Bob_sk = bruteforce_sk(ciphertext, g, p, Bob_pk)
 print("Decrypted Ciphertext: ", decrypt(ciphertext, Alice_pk, Bob_sk, p))
 print("Bob's private key: ", Bob_sk)
+print("\n")
+
+# (g^(xy) * m) / g^(xy) = (g^(xy) * m) * g^(xy)^-1
+print("2:")
+print("Ciphertext: ", ciphertext)
+print("Decrypted Ciphertext", decrypt(ciphertext, Alice_pk, Bob_sk, p))
+modified_message = modify_message(ciphertext, p)
+print("Modified Ciphertext: ", modified_message)
+print("Decrypted Modified Ciphertext", decrypt(modified_message, Alice_pk, Bob_sk, p))
+
+
 
