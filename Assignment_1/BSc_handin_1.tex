@@ -25,7 +25,7 @@ The function returns the public key and the secret key as a pair. The public key
 
 \[g^{sk}\]
 
-I also apply modulo with the order of the group to make sure that we stay inside the group. If we do not do this, the generator breaks.
+I will need to apply modulo with the order of the group to all of the computations to make sure that we stay inside the group. If we do not do this, the generator breaks. So for this it would be:
 
 \[g^{sk} \pmod p\]
 
@@ -35,15 +35,15 @@ The encryption of messages is handled by the function \textit{encrypt}.
 Here I take the public key of the recipient to the power of the senders secret key.
 I then apply the result to the message with the group operator which is times in this case.
 
-\[pk^{sk} \cdot m \pmod p\]
+\[pk^{sk} \cdot m\]
 
 \newpage
 
 \subsection{Decryption}
 The decryption of messages is handled by the function \textit{decrypt}.
-To get the plaintext message from the ciphertext we need to take the inverse.
+To get the plaintext message from the ciphertext we need to take the inverse of the encryption.
 
-\[\frac{c}{g^{sk^{pk}}}\]
+\[\frac{c_2}{g^{sk^{pk}}} = \frac{g^{sk^{pk}} \cdot m}{g^{sk^{pk}}} = m\]
 
 In this case we need the modular multiplicative inverse which we can get by using \textit{Fermat's little theorem}.
 
