@@ -1,0 +1,102 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{minted}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage[colorlinks=true]{hyperref}
+
+\title{Hand-in 1}
+\author{antni}
+\date{October 2022}
+
+\begin{document}
+
+\maketitle
+
+\section{Part 1}
+
+For the first part of the assignment I have created \hyperref[subsec:result1]{four functions} in Python that implements the basic operations I need for the assymetric public key method El Gamal.
+
+
+\subsection{Generating the Keys}
+The function \textit{gen\_keypair} is where I choose a random secret key \(sk \in \mathbb{Z}^*_q\). The generic group is integers with times as the group operator. The order of the group and the generator have been given in the assignment as p and g respectively.
+
+The function returns the public key and the secret key as a pair. The public key is generated with a call to the function \textit{gen\_pubkey}, which computes the public key by taking the generator \textit{g} to the power of the secret key \textit{sk}.
+
+\[g^{sk}\]
+
+I also apply modulo with the order of the group to make sure that we stay inside the group. If we do not do this, the generator breaks.
+
+\[g^{sk} \pmod p\]
+
+
+\subsection{Encryption}
+The encryption of messages is handled by the function \textit{encrypt}.
+Here I take the public key of the recipient to the power of the senders secret key.
+I then apply the result to the message with the group operator which is times in this case.
+
+\[pk^{sk} \cdot m \pmod p\]
+
+\newpage
+
+\subsection{Decryption}
+The decryption of messages is handled by the function \textit{decrypt}.
+To get the plaintext message from the ciphertext we need to take the inverse.
+
+\[\frac{c}{g^{sk^{pk}}}\]
+
+In this case we need the modular multiplicative inverse which we can get by using \textit{Fermat's little theorem}.
+
+\[a^{p-1} \equiv a \pmod p\]
+By multiplying both sides with \(a^{-1}\), this can be rewritten as:
+
+\[a^{-1} \equiv a^{p-2} \pmod p\]
+
+We can do this because we know that the order p is a prime and our group is the group of integers.
+
+
+\subsection{Result}
+\label{subsec:result1}
+
+\inputminted[linenos,lastline=21]{Python}{mandatory_exercise_1.py}
+\inputminted[linenos,firstline=31,lastline=41]{Python}{mandatory_exercise_1.py}
+
+
+
+\section{Part 2}
+
+\subsection{Bruteforcing Secret Keys}
+By intercepting Alice's encrypted message to Bob I learn of Alice's public key and the ciphertext.
+I assume that we also have Bob's public key from intercepting the initial key exchange.
+If we know the generator and the group order we can now bruteforce Bob's secret key by generating public keys from a secret key \(sk \in \mathbb{Z}^{*}_q\). If the generated public key matches Bob's public key, then we conclude that the secret key \textit{sk} is Bob's secret key.
+
+
+\subsection{Result}
+\label{subsec:result2}
+
+\inputminted[linenos,firstline=22,lastline=28]{Python}{mandatory_exercise_1.py}
+\inputminted[linenos,firstline=43,lastline=52]{Python}{mandatory_exercise_1.py}
+
+\newpage
+
+\section{Part 3}
+
+\subsection{Modifying a Ciphertext}
+By using El Gamal we get confidentiality, but we do not get any integrity.
+This means that we can change the message even if we cannot read it.
+
+The original plain text message is '2000' and we want to change the message to '6000'.
+In this case I assume that we know the original plain text message.
+The message is an integer value, so we should be able to just multiply it by 3 to get the desired result.
+This works because of associativity.
+
+\[g^{sk^{pk}} \cdot (m \cdot 3) = (g^{sk^{pk}} \cdot m) \cdot 3\]
+
+
+\subsection{Result}
+\label{subsec:result3}
+
+\inputminted[linenos,firstline=53,lastline=62]{Python}{mandatory_exercise_1.py}
+
+
+\end{document}
