@@ -1,5 +1,4 @@
 from random import randint
-from math import log
 
 # Our predefined values
 g = 666
@@ -37,20 +36,25 @@ ciphertext = encrypt(message, bob_pk, alice_sk, p)
 
 
 # Part 1
+print("1:")
+print("Ciphertext sent to Bob: ", ciphertext)
+print("\n")
+
+
+# Part 2
 bob_sk = bruteforce_sk(ciphertext, g, p, bob_pk)
 
-print("1:")
+print("2:")
 print("Ciphertext: ", ciphertext)
 print("Decrypted Ciphertext: ", decrypt(ciphertext, alice_pk, bob_sk, p))
 print("Bob's private key: ", bob_sk)
 print("\n")
 
 
-# Part 2
+# Part 3
 modified_message = ciphertext * 3 % p
 
-# (g^(xy) * m) / g^(xy) = (g^(xy) * m) * g^(xy)^-1
-print("2:")
+print("3:")
 print("Ciphertext: ", ciphertext)
 print("Decrypted Ciphertext", decrypt(ciphertext, alice_pk, bob_sk, p))
 print("Modified Ciphertext: ", modified_message)
