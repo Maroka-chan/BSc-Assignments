@@ -35,7 +35,7 @@ def start_client():
             ssock.send(rnd_bits)
             print(f"[Sent] Random bits: {rnd_bits}")
 
-            print(f"Bob's final roll: {((roll ^ aliceRoll)%6)+1}")
+            print(f"Final roll: {((roll ^ aliceRoll)%6)+1}")
 
 
 
@@ -75,7 +75,7 @@ def start_server():
 
             print("The hashes match :)")
 
-            print(f"Alice's final roll: {((roll ^ bobRoll)%6)+1}")
+            print(f"Final roll: {((roll ^ bobRoll)%6)+1}")
 
 
 if __name__ == "__main__":
